@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Budget Tracker
 
-## Getting Started
+Aplikacja webowa do planowania budżetu i zarządzania oszczędnościami. Umożliwia tworzenie planów budżetowych, śledzenie kont oszczędnościowych oraz monitorowanie stanu finansów w czasie rzeczywistym.
 
-First, run the development server:
+## Funkcjonalności
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Autentykacja użytkownika** - Rejestracja, logowanie, reset hasła z JWT
+- **Plany budżetowe** - Tworzenie i zarządzanie kategoriami wydatków (jedzenie, transport, mieszkanie)
+- **Konta oszczędnościowe** - Zarządzanie kontami bieżącymi, oprocentowanymi oraz celami oszczędnościowymi
+- **Dashboard** - Przegląd sumy wydatków, oszczędności oraz alerty budżetowe
+- **Profil użytkownika** - Zarządzanie danymi konta i preferencjami walutowymi
+
+## Technologie
+
+- **Frontend**: Next.js 14 (App Router), React 19, TypeScript, Tailwind CSS
+- **Backend**: Next.js API Routes, Prisma ORM
+- **Baza danych**: PostgreSQL
+- **Autentykacja**: JWT (jsonwebtoken), bcrypt
+- **Walidacja**: Zod
+- **Deployment**: Vercel, Supabase/Railway
+
+## Struktura projektu
+
+```
+budget-tracker/
+├── app/
+│   ├── api/              # API routes (auth, plans, savings, dashboard)
+│   ├── (dashboard)/      # Chronione strony aplikacji
+│   └── auth/             # Strony logowania i rejestracji
+├── components/            # Komponenty React
+├── lib/                  # Utilities (auth, db, api-client)
+├── types/                # TypeScript definitions
+└── prisma/               # Schema bazy danych
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Model danych
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Users** - Dane użytkowników, preferencje walutowe
+- **BudgetPlans** - Plany budżetowe z kategoriami i kwotami miesięcznymi
+- **SavingsAccounts** - Konta oszczędnościowe (bieżące, oprocentowane, cele)
+- **Sessions** - Sesje użytkowników (JWT tokens)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Instalacja
 
-## Learn More
+```bash
+# Klonowanie repozytorium
+git clone https://github.com/username/budget-tracker.git
+cd budget-tracker
 
-To learn more about Next.js, take a look at the following resources:
+# Instalacja zależności
+npm install
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Konfiguracja zmiennych środowiskowych
+cp .env.example .env.local
+# Edytuj .env.local i uzupełnij:
+# DATABASE_URL="postgresql://..."
+# JWT_SECRET="your-secret-key"
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Inicjalizacja bazy danych
+npx prisma migrate dev
+npx prisma generate
 
-## Deploy on Vercel
+# Uruchomienie w trybie deweloperskim
+npm run dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Aplikacja będzie dostępna pod adresem `http://localhost:3000`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## API Endpoints
+
+### Autentykacja
+- `POST /api/auth/register` - Rejestracja
+- `POST /api/auth/login` - Logowanie
+- `POST /api/auth/logout` - Wylogowanie
+- `GET /api/auth/me` - Informacje o zalogowanym użytkowniku
+
+### Plany budżetowe
+- `GET /api/plans` - Lista planów
+- `POST /api/plans` - Utworzenie planu
+- `PATCH /api/plans/:id` - Aktualizacja planu
+- `DELETE /api/plans/:id` - Usunięcie planu
+
+### Konta oszczędnościowe
+- `GET /api/savings` - Lista kont
+- `POST /api/savings` - Utworzenie konta
+- `PATCH /api/savings/:id` - Aktualizacja konta
+- `DELETE /api/savings/:id` - Usunięcie konta
+
+### Dashboard
+- `GET /api/dashboard/summary` - Podsumowanie finansowe
+
+## Status projektu
+
+MVP - Wersja minimalna z podstawowymi funkcjonalnościami zarządzania budżetem i oszczędnościami.
+
+## Licencja
+
+MIT
+
