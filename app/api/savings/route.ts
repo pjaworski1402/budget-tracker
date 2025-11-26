@@ -64,7 +64,9 @@ export async function POST(request: NextRequest) {
         type: validation.data.type,
         balance: validation.data.balance || 0,
         interestRate: validation.data.interestRate || null,
+        interestFrequency: validation.data.interestFrequency || null,
         targetAmount: validation.data.targetAmount || null,
+        maturityDate: validation.data.maturityDate ? new Date(validation.data.maturityDate) : null,
       },
     });
 

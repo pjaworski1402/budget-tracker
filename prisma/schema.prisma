@@ -19,6 +19,7 @@ model User {
   sessions        Session[]
   budgetPlans     BudgetPlan[]
   savingsAccounts SavingsAccount[]
+  payments        Payment[]
 
   @@map("users")
 }
@@ -44,22 +45,47 @@ model BudgetPlan {
   updatedAt   DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payments Payment[]
 
   @@map("budget_plans")
 }
 
 model SavingsAccount {
-  id          String   @id @default(cuid())
-  userId      String
-  name        String
-  type        String
-  balance     Decimal  @db.Decimal(10, 2) @default(0)
-  interestRate Decimal? @db.Decimal(5, 2)
-  targetAmount Decimal? @db.Decimal(10, 2)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              String   @id @default(cuid())
+  userId          String
+  name            String
+  type            String
+  balance         Decimal  @db.Decimal(10, 2) @default(0)
+  interestRate    Decimal? @db.Decimal(5, 2)
+  interestFrequency String? // daily, monthly, yearly
+  targetAmount    Decimal? @db.Decimal(10, 2)
+  maturityDate    DateTime? // dla obligacji
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("savings_accounts")
+}
+
+model Payment {
+  id          String   @id @default(cuid())
+  userId      String
+  budgetPlanId String?
+  category    String
+  amount      Decimal  @db.Decimal(10, 2)
+  paymentDate DateTime
+  type        String   // recurring, one-time, custom
+  frequency   String?  // weekly, monthly (dla recurring)
+  dayOfWeek   Int?     // 0-6 (dla weekly)
+  dayOfMonth  Int?     // 1-31 (dla monthly)
+  customDates String?  // JSON array of dates (dla custom)
+  isPaid      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  budgetPlan BudgetPlan? @relation(fields: [budgetPlanId], references: [id], onDelete: SetNull)
+
+  @@map("payments")
 }

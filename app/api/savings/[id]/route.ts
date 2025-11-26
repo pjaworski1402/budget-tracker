@@ -47,15 +47,39 @@ export async function PATCH(
       return validationErrorResponse(validation.error);
     }
 
+    const updateData: any = {
+      name: validation.data.name,
+      type: validation.data.type,
+      balance: validation.data.balance !== undefined ? validation.data.balance : Number(account.balance),
+    };
+
+    if (validation.data.interestRate !== undefined) {
+      updateData.interestRate = validation.data.interestRate;
+    } else if (account.interestRate !== null && account.interestRate !== undefined) {
+      updateData.interestRate = Number(account.interestRate);
+    }
+
+    if (validation.data.interestFrequency !== undefined) {
+      updateData.interestFrequency = validation.data.interestFrequency;
+    } else if ((account as any).interestFrequency !== null && (account as any).interestFrequency !== undefined) {
+      updateData.interestFrequency = (account as any).interestFrequency;
+    }
+
+    if (validation.data.targetAmount !== undefined) {
+      updateData.targetAmount = validation.data.targetAmount;
+    } else if (account.targetAmount !== null && account.targetAmount !== undefined) {
+      updateData.targetAmount = Number(account.targetAmount);
+    }
+
+    if (validation.data.maturityDate !== undefined) {
+      updateData.maturityDate = validation.data.maturityDate ? new Date(validation.data.maturityDate) : null;
+    } else if ((account as any).maturityDate !== null && (account as any).maturityDate !== undefined) {
+      updateData.maturityDate = new Date((account as any).maturityDate);
+    }
+
     const updatedAccount = await prisma.savingsAccount.update({
       where: { id },
-      data: {
-        name: validation.data.name,
-        type: validation.data.type,
-        balance: validation.data.balance || account.balance,
-        interestRate: validation.data.interestRate !== undefined ? validation.data.interestRate : account.interestRate,
-        targetAmount: validation.data.targetAmount !== undefined ? validation.data.targetAmount : account.targetAmount,
-      },
+      data: updateData,
     });
 
     return successResponse({ account: updatedAccount }, 'Konto oszczędnościowe zostało zaktualizowane');
