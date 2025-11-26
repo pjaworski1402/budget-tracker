@@ -16,7 +16,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sessions Session[]
+  sessions        Session[]
+  budgetPlans     BudgetPlan[]
+  savingsAccounts SavingsAccount[]
 
   @@map("users")
 }
@@ -31,4 +33,33 @@ model Session {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
+}
+
+model BudgetPlan {
+  id          String   @id @default(cuid())
+  userId      String
+  category    String
+  monthlyAmount Decimal @db.Decimal(10, 2)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("budget_plans")
+}
+
+model SavingsAccount {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  type        String
+  balance     Decimal  @db.Decimal(10, 2) @default(0)
+  interestRate Decimal? @db.Decimal(5, 2)
+  targetAmount Decimal? @db.Decimal(10, 2)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("savings_accounts")
 }
