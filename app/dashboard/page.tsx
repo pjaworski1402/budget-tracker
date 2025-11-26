@@ -302,7 +302,7 @@ export default function DashboardPage() {
                   href="/dashboard/plans"
                   className="text-purple-300 hover:text-white transition-colors text-sm font-medium"
                 >
-                  Zobacz wszystkie →
+                  Zarządzaj →
                 </Link>
               </div>
               {summary.recentPlans.length > 0 ? (
@@ -343,7 +343,7 @@ export default function DashboardPage() {
                   href="/dashboard/savings"
                   className="text-purple-300 hover:text-white transition-colors text-sm font-medium"
                 >
-                  Zobacz wszystkie →
+                  Zarządzaj →
                 </Link>
               </div>
               {summary.recentAccounts.length > 0 ? (
